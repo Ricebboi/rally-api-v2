@@ -10,4 +10,5 @@ app.use('/api', require('./api/handle-booking-payment'));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log("Environment variables loaded.");
 });

@@ -1,9 +1,13 @@
-const express = require('express');
-const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-router.post('/handle-booking-payment', async (req, res) => {
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+
   const { amount, currency, paymentMethodId, coachAccountId } = req.body;
+
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
@@ -25,6 +29,4 @@ router.post('/handle-booking-payment', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
-
-module.exports = router;
+};
